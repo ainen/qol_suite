@@ -1,0 +1,34 @@
+* text=auto eol=lf
+
+# Source and text metadata use stable LF endings on every platform.
+*.lua text eol=lf
+*.py text eol=lf
+*.ps1 text eol=lf
+*.sh text eol=lf
+*.json text eol=lf
+*.md text eol=lf
+*.txt text eol=lf
+*.toml text eol=lf
+*.yml text eol=lf
+*.yaml text eol=lf
+
+# Packaged artifacts, media, fonts, and game data are binary.
+*.zip binary
+*.modpkg binary
+*.love binary
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.webp binary
+*.ico binary
+*.ogg binary
+*.wav binary
+*.mp3 binary
+*.ttf binary
+*.otf binary
+*.woff binary
+*.woff2 binary
+*.gb binary
+*.gbc binary
+*.sav binary

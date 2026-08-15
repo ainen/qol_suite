@@ -1,0 +1,33 @@
+return {
+  summary = "Optional battle, overworld, Pokédex, party, bag, naming, and automation improvements for Red, Blue, Yellow, and Gold.",
+  author = "Richard",
+  tags = { "quality-of-life", "ui", "mechanics" },
+  differences = {
+    changed = {
+      "installs and configures the suite's quality-of-life features as one package",
+    },
+    added = {
+      "type-matchup information plus Gen 1 XP and caught indicators",
+      "EXP sharing, automatic battle/catching, ball selection, and safety stops",
+      "move swapping, direct HM use, reusable TMs, and quick field moves",
+      "a configurable minimap with Pokédex habitat tracking",
+      "independent encounter, party, and Gold egg panels with corner stacking",
+      "Pokédex filters and current-area encounter details",
+      "bag categories, search, sorting, quick-use shortcuts, and ball counts",
+      "party ordering, naming controls, floating menus, and shorter Center healing",
+      "dependent settings that hide when their parent feature is disabled",
+      "compatibility adapters for supported voxel and Gen 3-inspired battle UIs",
+    },
+    known = {
+      "the pre-game launcher may show dependent rows before mod code runs; the in-game manager and runtime still enforce their parent settings",
+    },
+  },
+  credits = {
+    { who = "Pokemon Move Effectiveness Native", for_ = "native move effectiveness display" },
+    { who = "Pokemon Move Freedom", for_ = "outside-battle move swapping" },
+    { who = "Pokemon Naming Enhancements", for_ = "naming quality-of-life flows" },
+    { who = "Pokemon Party Lead", for_ = "party lead action" },
+    { who = "Pokemon Gen 1 Recompilation Project", for_ = "mod API and UI hooks" },
+  },
+  compat = { engine = ">=0.1.91 <0.2.0", modApi = 2 },
+}

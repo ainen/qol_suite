@@ -1,0 +1,102 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_call:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  compatibility:
+    name: gen1recomp ${{ matrix.engine_ref }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        engine_ref: [v0.1.91, v0.1.92]
+
+    steps:
+      - name: Checkout QoL Suite
+        uses: actions/checkout@v4
+
+      - name: Checkout gen1recomp
+        uses: actions/checkout@v4
+        with:
+          repository: bryanthaboi/gen1recomp
+          ref: ${{ matrix.engine_ref }}
+          path: engine
+
+      - name: Install LuaJIT
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y luajit
+
+      - name: Static validation
+        working-directory: engine
+        env:
+          MODKIT_LUAJIT: /usr/bin/luajit
+        run: |
+          set -euo pipefail
+          python3 tools/modkit.py validate ../qol_suite --strict --base fixture
+          python3 tools/modkit.py lint ../qol_suite
+          if python3 tools/modkit.py gen2check --help >/dev/null 2>&1; then
+            python3 tools/modkit.py gen2check ../qol_suite --strict
+          fi
+          while IFS= read -r -d '' file; do
+            LUA_FILE="$file" luajit -e 'assert(loadfile(os.getenv("LUA_FILE")))'
+          done < <(find ../qol_suite -type f -name '*.lua' -print0)
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          for path in Path("../qol_suite").rglob("*.json"):
+              with path.open(encoding="utf-8") as stream:
+                  json.load(stream)
+              print(f"valid JSON: {path}")
+          PY
+
+      - name: Standalone feature tests
+        working-directory: engine
+        run: |
+          set -uo pipefail
+          status=0
+          for test in ../qol_suite/tests/*_test.lua; do
+            echo "::group::$(basename "$test")"
+            luajit "$test" || status=1
+            echo "::endgroup::"
+          done
+          exit "$status"
+
+      - name: Red, Blue, and Yellow matrix
+        working-directory: engine
+        run: |
+          set -euo pipefail
+          for version in red blue yellow; do
+            QOL_SUITE_TEST_VERSION="$version" \
+              luajit ../qol_suite/tests/rby_compatibility_test.lua
+          done
+
+      - name: Require Gold coverage
+        working-directory: engine
+        run: |
+          set -euo pipefail
+          output="$(luajit ../qol_suite/tests/gold_compatibility_test.lua)"
+          printf '%s\n' "$output"
+          if grep -q '^SKIP ' <<<"$output"; then
+            echo "::error::Gold compatibility test skipped on the Gold job"
+            exit 1
+          fi
+
+      - name: Verify canonical package
+        run: |
+          set -euo pipefail
+          version="$(python3 -c 'import json; print(json.load(open("qol_suite/manifest.json"))["version"])')"
+          python3 tools/package_mod.py \
+            --source qol_suite \
+            --readme README.md \
+            --output "dist/qol_suite-${version}.zip" \
+            --version "$version"
+          unzip -l "dist/qol_suite-${version}.zip"

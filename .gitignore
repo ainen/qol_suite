@@ -1,0 +1,42 @@
+# Local/editor files
+.DS_Store
+Thumbs.db
+*.swp
+
+# Generated release output
+dist/
+*.zip
+
+# Local engine checkouts and build products
+/build/
+/gen1recomp/
+/gen1recomp-dev/
+/gen1recomp-latest/
+/gen1recomp-pr/
+/gen1recomp-v*/
+/_lua_compile_check/
+/_qol_modkit_safety/
+
+# ROMs and local test captures
+*.gb
+*.gbc
+*.gba
+*.log
+*_smoke.log
+
+# Workspace notes and local tooling
+/.opencode/
+/IDEA.md
+/WORKSPACE-OVERVIEW.md
+/mod_option_schemas.json
+
+# Standalone development copies superseded by QoL Suite
+/pokemon_move_effectiveness/
+/pokemon_move_effectiveness_native/
+/pokemon_move_freedom/
+/pokemon_naming_enhancements/
+/pokemon_party_lead/
+
+# Local test/run output
+build/
+options.lua*

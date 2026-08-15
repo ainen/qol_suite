@@ -1,0 +1,297 @@
+{
+  "version": 1,
+  "hooks": [
+    { "id": "battle.exp_award", "mode": "wrap" },
+    { "id": "battle.caught_marker_visible", "mode": "wrap" },
+    { "id": "battle.low_health_alarm", "mode": "wrap" },
+    { "id": "battle.overlay", "mode": "wrap" },
+    { "id": "battle.player_hud", "mode": "wrap" },
+    { "id": "core.update", "mode": "wrap" },
+    { "id": "fieldmove.eligibility", "mode": "wrap" },
+    { "id": "render.hud", "mode": "wrap" },
+    { "id": "screen.render_visible", "mode": "wrap" },
+    { "id": "script.command", "mode": "wrap" },
+    { "id": "ui.party.submenu", "mode": "wrap" },
+    { "id": "ui.pokedex.actions", "mode": "wrap" },
+    { "id": "world.nurse_heal.confirmation", "mode": "wrap" }
+  ],
+  "apis": [
+    { "id": "mod.content.map_scripts", "mode": "use" },
+    { "id": "mod.content.screens", "mode": "use" },
+    { "id": "mod.find", "mode": "use" },
+    { "id": "mod.input", "mode": "use" },
+    { "id": "mod.options", "mode": "use" },
+    { "id": "mod.save", "mode": "use" },
+    { "id": "mod.ui", "mode": "use" },
+    { "id": "mod.world", "mode": "use" }
+  ],
+  "capabilities": [
+    { "id": "auto_battle", "mode": "provide" },
+    { "id": "auto_battle_status_immunities", "mode": "provide" },
+    { "id": "auto_catch_target", "mode": "provide" },
+    { "id": "battle_teardown", "mode": "provide" },
+    { "id": "caught_indicator", "mode": "provide" },
+    { "id": "egg_tracker", "mode": "provide" },
+    { "id": "encounter_rate", "mode": "provide" },
+    { "id": "encounter_tracker", "mode": "provide" },
+    { "id": "exp_share", "mode": "provide" },
+    { "id": "experience_bar", "mode": "provide" },
+    { "id": "field_abilities", "mode": "provide" },
+    { "id": "floating_menus", "mode": "provide" },
+    { "id": "gen3_ui_compat", "mode": "provide" },
+    { "id": "hm_without_teaching", "mode": "provide" },
+    { "id": "inventory_improvements", "mode": "provide" },
+    { "id": "low_health_alarm", "mode": "provide" },
+    { "id": "minimap", "mode": "provide" },
+    { "id": "move_effectiveness", "mode": "provide" },
+    { "id": "move_freedom", "mode": "provide" },
+    { "id": "naming_enhancements", "mode": "provide" },
+    { "id": "overlay_layout", "mode": "provide" },
+    { "id": "option_visibility", "mode": "provide" },
+    { "id": "party_lead", "mode": "provide" },
+    { "id": "party_overview", "mode": "provide" },
+    { "id": "pokedex_filters", "mode": "provide" },
+    { "id": "reusable_tms", "mode": "provide" },
+    { "id": "skip_center_dialogue", "mode": "provide" },
+    { "id": "tracking", "mode": "provide" },
+    { "id": "voxel_hud", "mode": "provide" }
+  ],
+  "resources": [
+    "resource:file:qol_suite:options_schema.lua",
+    "resource:file:qol_suite:transforms.lua",
+    "resource:file:qol_suite:features/auto_battle.lua",
+    "resource:file:qol_suite:features/auto_catch_target.lua",
+    "resource:file:qol_suite:features/bag_categories.lua",
+    "resource:file:qol_suite:features/battle_teardown.lua",
+    "resource:file:qol_suite:features/caught_indicator.lua",
+    "resource:file:qol_suite:features/egg_tracker.lua",
+    "resource:file:qol_suite:features/encounter_rate.lua",
+    "resource:file:qol_suite:features/encounter_tracker.lua",
+    "resource:file:qol_suite:features/exp_share.lua",
+    "resource:file:qol_suite:features/experience_bar.lua",
+    "resource:file:qol_suite:features/field_abilities.lua",
+    "resource:file:qol_suite:features/floating_menus.lua",
+    "resource:file:qol_suite:features/gen3_ui_compat.lua",
+    "resource:file:qol_suite:features/hm_without_teaching.lua",
+    "resource:file:qol_suite:features/low_health_alarm.lua",
+    "resource:file:qol_suite:features/minimap.lua",
+    "resource:file:qol_suite:features/move_effectiveness_native.lua",
+    "resource:file:qol_suite:features/move_freedom.lua",
+    "resource:file:qol_suite:features/naming_enhancements.lua",
+    "resource:file:qol_suite:features/overlay_layout.lua",
+    "resource:file:qol_suite:features/option_visibility.lua",
+    "resource:file:qol_suite:features/party_lead.lua",
+    "resource:file:qol_suite:features/party_overview.lua",
+    "resource:file:qol_suite:features/pokedex_filters.lua",
+    "resource:file:qol_suite:features/reusable_tms.lua",
+    "resource:file:qol_suite:features/skip_center_dialogue.lua",
+    "resource:file:qol_suite:features/tracking.lua",
+    "resource:file:qol_suite:features/voxel_hud.lua",
+    { "id": "derived.caught_marker", "resource_type": "generated_image" },
+    { "id": "screen.BagMenu", "resource_type": "screen" },
+    { "id": "screen.Gen2PackMenu", "resource_type": "screen" },
+    { "id": "screen.MoveSwapMenu", "resource_type": "screen" },
+    { "id": "script.NAME_RATERS_HOUSE", "resource_type": "map_script" }
+  ],
+  "states": [
+    { "id": "overworld", "initial": true },
+    { "id": "battle_active" },
+    { "id": "battle_cleanup" }
+  ],
+  "transitions": [
+    { "id": "battle-started", "from": "overworld", "to": "battle_active",
+      "trigger": "screen.pushed" },
+    { "id": "battle-ended", "from": "battle_active", "to": "battle_cleanup",
+      "trigger": "battle.ended" },
+    { "id": "battle-cleanup-complete", "from": "battle_cleanup", "to": "overworld",
+      "trigger": "core.update" }
+  ],
+  "constraints": [
+    {
+      "id": "retain-pp-needs-swap-moves",
+      "if": { "retainPP": true },
+      "then": { "swapMoves": true }
+    },
+    {
+      "id": "auto-catch-needs-auto-battle",
+      "if": { "autoCatch": true },
+      "then": { "autoBattle": true }
+    },
+    {
+      "id": "auto-catch-options-need-auto-catch",
+      "if": { "autoCatchNewOnly": true },
+      "then": { "autoBattle": true, "autoCatch": true }
+    },
+    {
+      "id": "auto-catch-target-needs-auto-catch",
+      "if": { "autoCatchTarget": true },
+      "then": { "autoBattle": true, "autoCatch": true }
+    },
+    {
+      "id": "auto-catch-safety-needs-auto-battle",
+      "if": { "autoStopLowHp": true },
+      "then": { "autoBattle": true }
+    },
+    {
+      "id": "auto-catch-pauses-need-auto-battle",
+      "if": { "autoPauseNewEntry": true },
+      "then": { "autoBattle": true }
+    },
+    {
+      "id": "auto-catch-evolution-pause-needs-auto-battle",
+      "if": { "autoPauseEvolution": true },
+      "then": { "autoBattle": true }
+    },
+    {
+      "id": "no-ball-stop-needs-auto-catch",
+      "if": { "autoStopNoBalls": true },
+      "then": { "autoBattle": true, "autoCatch": true }
+    },
+    {
+      "id": "ball-counts-need-auto-catch",
+      "if": { "showBallCounts": true },
+      "then": { "autoBattle": true, "autoCatch": true }
+    },
+    {
+      "id": "stop-on-target-needs-targeting",
+      "if": { "autoStopTarget": true },
+      "then": { "autoBattle": true, "autoCatch": true, "autoCatchTarget": true }
+    },
+    {
+      "id": "auto-field-moves-need-field-moves",
+      "if": { "fieldAbilitiesAuto": true },
+      "then": { "fieldAbilities": true }
+    },
+    {
+      "id": "party-ordering-needs-party-overview",
+      "if": { "autoPartyOrder": true },
+      "then": { "partyOverview": true }
+    },
+    {
+      "id": "tracking-needs-minimap",
+      "if": { "tracking": true },
+      "then": { "minimap": true }
+    },
+    {
+      "id": "tracker-filters-need-tracker",
+      "if": { "encounterTrackerTracked": true },
+      "then": { "encounterTracker": true }
+    },
+    {
+      "id": "tracker-land-filter-needs-tracker",
+      "if": { "encounterTrackerLand": true },
+      "then": { "encounterTracker": true }
+    },
+    {
+      "id": "tracker-surf-filter-needs-tracker",
+      "if": { "encounterTrackerSurf": true },
+      "then": { "encounterTracker": true }
+    },
+    {
+      "id": "tracker-fishing-filter-needs-tracker",
+      "if": { "encounterTrackerFishing": true },
+      "then": { "encounterTracker": true }
+    },
+    {
+      "id": "reset-name-needs-renaming",
+      "if": { "restoreName": true },
+      "then": { "renameAnywhere": true }
+    },
+    {
+      "id": "trade-rename-needs-trade-renaming",
+      "if": { "autoRenameTrades": true },
+      "then": { "renameNpcTrades": true }
+    }
+  ],
+  "coverage": {
+    "headless/tests/qol_suite_test.lua": {
+      "nodes": [
+        "battle.exp_award", "battle.caught_marker_visible",
+        "battle.low_health_alarm", "battle.overlay",
+        "battle.player_hud", "core.update", "fieldmove.eligibility",
+        "render.hud", "ui.party.submenu", "ui.pokedex.actions",
+        "mod.content.map_scripts", "mod.content.screens", "mod.input",
+        "mod.options", "mod.save", "mod.ui", "mod.world",
+        "caught_indicator", "encounter_rate", "encounter_tracker",
+        "exp_share", "experience_bar", "field_abilities",
+        "hm_without_teaching", "inventory_improvements", "low_health_alarm",
+        "minimap", "move_effectiveness", "move_freedom",
+        "naming_enhancements", "overlay_layout", "party_lead",
+        "party_overview", "pokedex_filters", "reusable_tms",
+        "skip_center_dialogue", "tracking", "voxel_hud",
+        "resource:file:qol_suite:options_schema.lua",
+        "resource:file:qol_suite:features/auto_battle.lua",
+        "resource:file:qol_suite:features/auto_catch_target.lua",
+        "resource:file:qol_suite:features/bag_categories.lua",
+        "resource:file:qol_suite:features/battle_teardown.lua",
+        "resource:file:qol_suite:features/caught_indicator.lua",
+        "resource:file:qol_suite:features/egg_tracker.lua",
+        "resource:file:qol_suite:features/encounter_rate.lua",
+        "resource:file:qol_suite:features/encounter_tracker.lua",
+        "resource:file:qol_suite:features/exp_share.lua",
+        "resource:file:qol_suite:features/experience_bar.lua",
+        "resource:file:qol_suite:features/field_abilities.lua",
+        "resource:file:qol_suite:features/floating_menus.lua",
+        "resource:file:qol_suite:features/gen3_ui_compat.lua",
+        "resource:file:qol_suite:features/hm_without_teaching.lua",
+        "resource:file:qol_suite:features/low_health_alarm.lua",
+        "resource:file:qol_suite:features/minimap.lua",
+        "resource:file:qol_suite:features/move_effectiveness_native.lua",
+        "resource:file:qol_suite:features/move_freedom.lua",
+        "resource:file:qol_suite:features/naming_enhancements.lua",
+        "resource:file:qol_suite:features/overlay_layout.lua",
+        "resource:file:qol_suite:features/option_visibility.lua",
+        "resource:file:qol_suite:features/party_lead.lua",
+        "resource:file:qol_suite:features/party_overview.lua",
+        "resource:file:qol_suite:features/pokedex_filters.lua",
+        "resource:file:qol_suite:features/reusable_tms.lua",
+        "resource:file:qol_suite:features/skip_center_dialogue.lua",
+        "resource:file:qol_suite:features/tracking.lua",
+        "resource:file:qol_suite:features/voxel_hud.lua",
+        "screen.BagMenu", "screen.Gen2PackMenu", "screen.MoveSwapMenu",
+        "script.NAME_RATERS_HOUSE"
+      ]
+    },
+    "headless/tests/asset_transform_test.lua": {
+      "nodes": [
+        "resource:file:qol_suite:transforms.lua", "derived.caught_marker"
+      ]
+    },
+    "headless/tests/release_options_test.lua": {
+      "nodes": [
+        "option_visibility",
+        "resource:file:qol_suite:features/option_visibility.lua"
+      ]
+    },
+    "headless/tests/auto_battle_test.lua": {
+      "nodes": ["auto_battle"]
+    },
+    "headless/tests/auto_battle_gold_status_test.lua": {
+      "nodes": ["auto_battle", "auto_battle_status_immunities"]
+    },
+    "headless/tests/auto_catch_target_test.lua": {
+      "nodes": ["auto_catch_target"]
+    },
+    "headless/tests/battle_teardown_test.lua": {
+      "nodes": ["battle_teardown", "overworld", "battle_active",
+        "battle_cleanup"],
+      "edges": ["battle-started", "battle-ended", "battle-cleanup-complete"]
+    },
+    "headless/tests/egg_tracker_test.lua": {
+      "nodes": ["egg_tracker"]
+    },
+    "headless/tests/floating_menus_test.lua": {
+      "nodes": ["floating_menus", "screen.render_visible"]
+    },
+    "headless/tests/gen3_ui_compat_test.lua": {
+      "nodes": ["gen3_ui_compat", "mod.find"]
+    },
+    "headless/tests/performance_hotpaths_test.lua": {
+      "nodes": ["auto_battle", "caught_indicator", "experience_bar",
+        "gen3_ui_compat", "overlay_layout", "voxel_hud"]
+    },
+    "headless/tests/skip_center_dialogue_test.lua": {
+      "nodes": ["script.command", "world.nurse_heal.confirmation"]
+    }
+  }
+}

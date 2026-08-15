@@ -1,0 +1,2 @@
+# Tests are source-only and must not be included in release packages.
+tests/
