@@ -17,7 +17,10 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        engine_ref: [v0.1.91, v0.1.92]
+        # Native option-row visible_if requires engine >=0.1.95, so the
+        # supported floor is the lowest tested engine; the newest release
+        # is the highest.
+        engine_ref: [v0.1.95, v0.2.4]
 
     steps:
       - name: Checkout QoL Suite
