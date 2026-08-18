@@ -19,16 +19,11 @@ T.check(type(target.toggle) == "function",
 T.check(type(target.matches) == "function",
   "AUTO CATCH TARGET exposes a match helper")
 local function visibilityHas(condition, key)
-  if not condition then return false end
-  if condition.key == key and condition.equals == true then return true end
-  for _, child in ipairs(condition.all or {}) do
-    if visibilityHas(child, key) then return true end
-  end
-  return false
+  if type(condition) ~= "table" then return false end
+  return condition.key == key and condition.equals == true
 end
-T.check(visibilityHas(schemaByKey.autoCatchTarget.visibleIf, "autoBattle")
-  and visibilityHas(schemaByKey.autoCatchTarget.visibleIf, "autoCatch"),
-  "AUTO CATCH TARGET setting requires AUTO BATTLE and AUTO CATCH")
+T.check(visibilityHas(schemaByKey.autoCatchTarget.visible_if, "autoCatch"),
+  "AUTO CATCH TARGET setting is gated by its direct parent AUTO CATCH")
 
 local game = { data = { pokemon = {
   FIXMON_A = { name = "FIXMON A" },

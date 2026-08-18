@@ -1,5 +1,18 @@
 # Changelog
 
+## 1.2.0 - 2026-08-17
+
+- Added gen1recomp v0.2.x compatibility by widening the supported engine
+  range to `>=0.1.95 <0.3.0` (the 0.2.x launcher rejected the previous
+  `<0.2.0` range).
+- Migrated dependent-option rows to the engine's native `visible_if` option
+  rows (available since v0.1.95) and removed the custom option-visibility
+  monkey-patch feature, which is now redundant. Composite auto-catch rows
+  now gate on their direct parent row; the features themselves still require
+  their full option chain to be enabled before activating.
+- Verified against v0.2.3 (commit 4c13770e): the full headless suite passes
+  across Red, Blue, Yellow, and Gold.
+
 ## 1.0.0 - 2026-08-15
 
 Initial public release of QoL Suite for Pokémon Red, Blue, Yellow, and Gold in

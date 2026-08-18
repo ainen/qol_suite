@@ -43,7 +43,7 @@ for _, key in ipairs({
 end
 
 local exports = run.loader.exports[MOD_ID]
-T.check(type(exports) == "table" and #exports.features == 28,
+T.check(type(exports) == "table" and #exports.features == 27,
   version .. " loads every QoL Suite runtime module")
 T.check(not (GameVersion.isGold and GameVersion.isGold()),
   version .. " follows the RBY generation path")

@@ -69,38 +69,30 @@ T.check(exports.advance({ waitingUI = true, game = { stack = {
 } } }) == false,
   "AUTO BATTLE never calls a missing stack pop method")
 local function visibilityHas(condition, key)
-  if not condition then return false end
-  if condition.key == key and condition.equals == true then return true end
-  for _, child in ipairs(condition.all or {}) do
-    if visibilityHas(child, key) then return true end
-  end
-  return false
+  if type(condition) ~= "table" then return false end
+  return condition.key == key and condition.equals == true
 end
 for _, row in ipairs({
-  { "autoCatchNewOnly", { "autoBattle", "autoCatch" } },
-  { "autoCatchTarget", { "autoBattle", "autoCatch" } },
-  { "autoCatchBall", { "autoBattle", "autoCatch" } },
+  { "autoCatchNewOnly", "autoCatch" },
+  { "autoCatchTarget", "autoCatch" },
+  { "autoCatchBall", "autoCatch" },
 }) do
-  local option, parents = row[1], row[2]
-  for _, parent in ipairs(parents) do
-    T.check(visibilityHas(schemaByKey[option].visibleIf, parent),
-      option .. " is conditional on " .. parent)
-  end
+  local option, parent = row[1], row[2]
+  T.check(visibilityHas(schemaByKey[option].visible_if, parent),
+    option .. " is gated by its direct parent " .. parent)
 end
 T.eq(#schemaByKey.autoCatchBall.choices, 3,
   "AUTO CATCH BALL exposes BEST, WORST, and POKE BALL ONLY")
 for _, row in ipairs({
-  { "autoStopLowHp", { "autoBattle" } },
-  { "autoStopNoBalls", { "autoBattle", "autoCatch" } },
-  { "autoStopTarget", { "autoBattle", "autoCatch", "autoCatchTarget" } },
-  { "autoPauseNewEntry", { "autoBattle" } },
-  { "autoPauseEvolution", { "autoBattle" } },
+  { "autoStopLowHp", "autoBattle" },
+  { "autoStopNoBalls", "autoCatch" },
+  { "autoStopTarget", "autoCatchTarget" },
+  { "autoPauseNewEntry", "autoBattle" },
+  { "autoPauseEvolution", "autoBattle" },
 }) do
-  local option, parents = row[1], row[2]
-  for _, parent in ipairs(parents) do
-    T.check(visibilityHas(schemaByKey[option].visibleIf, parent),
-      option .. " is conditional on " .. parent)
-  end
+  local option, parent = row[1], row[2]
+  T.check(visibilityHas(schemaByKey[option].visible_if, parent),
+    option .. " is gated by its direct parent " .. parent)
 end
 
 local moves = {

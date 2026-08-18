@@ -47,7 +47,6 @@
     { "id": "move_freedom", "mode": "provide" },
     { "id": "naming_enhancements", "mode": "provide" },
     { "id": "overlay_layout", "mode": "provide" },
-    { "id": "option_visibility", "mode": "provide" },
     { "id": "party_lead", "mode": "provide" },
     { "id": "party_overview", "mode": "provide" },
     { "id": "pokedex_filters", "mode": "provide" },
@@ -79,7 +78,6 @@
     "resource:file:qol_suite:features/move_freedom.lua",
     "resource:file:qol_suite:features/naming_enhancements.lua",
     "resource:file:qol_suite:features/overlay_layout.lua",
-    "resource:file:qol_suite:features/option_visibility.lua",
     "resource:file:qol_suite:features/party_lead.lua",
     "resource:file:qol_suite:features/party_overview.lua",
     "resource:file:qol_suite:features/pokedex_filters.lua",
@@ -240,7 +238,6 @@
         "resource:file:qol_suite:features/move_freedom.lua",
         "resource:file:qol_suite:features/naming_enhancements.lua",
         "resource:file:qol_suite:features/overlay_layout.lua",
-        "resource:file:qol_suite:features/option_visibility.lua",
         "resource:file:qol_suite:features/party_lead.lua",
         "resource:file:qol_suite:features/party_overview.lua",
         "resource:file:qol_suite:features/pokedex_filters.lua",
@@ -259,8 +256,8 @@
     },
     "headless/tests/release_options_test.lua": {
       "nodes": [
-        "option_visibility",
-        "resource:file:qol_suite:features/option_visibility.lua"
+        "mod.options",
+        "resource:file:qol_suite:options_schema.lua"
       ]
     },
     "headless/tests/auto_battle_test.lua": {

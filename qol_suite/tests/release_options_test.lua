@@ -12,31 +12,41 @@ local run = T.sdk.loadMod("qol_suite", {
   data = T.fixtures.fresh(), root = "..",
 })
 
-T.eq(#run.errors, 0, "supported 0.1.x flat settings package load is clean")
+T.eq(#run.errors, 0, "supported 0.1.95+/0.2.x settings package load is clean")
 local manifest = run.loader.mods.qol_suite.manifest
 local Semver = require("src.mods.Semver")
-T.eq(manifest.game_version, ">=0.1.91 <0.2.0",
-  "the manifest targets the tested 0.1.x engine line")
-T.check(Semver.satisfies("0.1.91", manifest.game_version)
-    and Semver.satisfies("0.1.92", manifest.game_version)
-    and Semver.satisfies("0.1.99", manifest.game_version),
-  "supported 0.1.x releases satisfy the engine range")
-T.check(not Semver.satisfies("0.1.90", manifest.game_version)
-    and not Semver.satisfies("0.2.0", manifest.game_version),
-  "older and future minor engine lines remain outside the supported range")
+T.eq(manifest.game_version, ">=0.1.95 <0.3.0",
+  "the manifest targets engine lines that ship native visible_if")
+T.check(Semver.satisfies("0.1.95", manifest.game_version)
+    and Semver.satisfies("0.1.99", manifest.game_version)
+    and Semver.satisfies("0.2.0", manifest.game_version)
+    and Semver.satisfies("0.2.3", manifest.game_version),
+  "supported engine releases satisfy the range")
+T.check(not Semver.satisfies("0.1.94", manifest.game_version)
+    and not Semver.satisfies("0.3.0", manifest.game_version),
+  "pre-native and future major-minor engine lines stay outside the range")
 local schema = run.loader.optionSchemas.qol_suite
-T.eq(#schema, 53, "supported 0.1.x receives every RBY setting as a flat row")
+T.eq(#schema, 53, "RBY receives every setting as a flat row")
 for _, row in ipairs(schema) do
   T.check(row.type == "toggle" or row.type == "choice"
       or row.type == "number" or row.type == "text",
-    "0.1.x receives a supported row type: " .. tostring(row.key))
+    "supported row type: " .. tostring(row.key))
   T.eq(row.options, nil,
-    "0.1.x schema contains no nested child list: " .. tostring(row.key))
+    "schema contains no nested child list: " .. tostring(row.key))
 end
-T.eq(run.loader.exports.qol_suite.optionVisibility.target, "v0.1.x",
-  "dependent-row filtering targets the supported production manager")
+local nativeConditions = 0
+for _, row in ipairs(schema) do
+  if row.visible_if ~= nil then
+    T.check(type(row.visible_if) == "table" and row.visible_if ~= nil
+        and (row.visible_if.key ~= nil),
+      "dependent row " .. tostring(row.key) .. " uses a single-parent visible_if")
+    nativeConditions = nativeConditions + 1
+  end
+end
+T.eq(nativeConditions, 28,
+  "RBY declares native single-parent visibility on 28 dependent rows")
 T.check(run.loader.exports.qol_suite ~= nil,
-  "flat settings initialize every runtime feature")
+  "settings initialize every runtime feature")
 
 local manager = setmetatable({
   game = {
@@ -81,9 +91,9 @@ rowById(manager.optionRows, "autoCatch").step()
 T.check(rowById(manager.optionRows, "autoCatchBall") ~= nil,
   "catch controls appear after enabling AUTO CATCH")
 manager:setOption("qol_suite", "autoCatchBall", "worst")
-rowById(manager.optionRows, "autoBattle").step()
+rowById(manager.optionRows, "autoCatch").step()
 T.check(rowById(manager.optionRows, "autoCatchBall") == nil,
-  "the complete catch group hides with AUTO BATTLE")
+  "AUTO CATCH BALL hides when its direct parent AUTO CATCH is disabled")
 rowById(manager.optionRows, "__reset").activate()
 T.eq(run.loader.modOptions.qol_suite.autoCatchBall, "best",
   "RESET DEFAULTS restores hidden dependent settings too")

@@ -119,8 +119,8 @@ byKey = {}
 for _, row in ipairs(leaves) do
   byKey[row.key] = row
 end
-T.eq(run.loader.exports[MOD_ID].optionVisibility.target, "v0.1.x",
-  "the flat production manager receives dependent-row visibility support")
+T.check(run.loader.exports[MOD_ID].optionVisibility == nil,
+  "dependent-row visibility is handled by the engine, not a shim")
 local expectedOrder = {
   "effectiveness", "lowHealthAlarm", "experienceBar", "caughtIndicator",
   "expShare", "swapMoves", "retainPP", "autoBattle", "autoStopLowHp", "autoPauseNewEntry",
@@ -239,13 +239,13 @@ local expectedVisibility = {
   encounterTrackerSurf = "encounterTracker",
   encounterTrackerFishing = "encounterTracker",
   autoCatch = "autoBattle",
-  autoCatchNewOnly = { "autoBattle", "autoCatch" },
-  autoCatchTarget = { "autoBattle", "autoCatch" },
-  autoCatchBall = { "autoBattle", "autoCatch" },
-  showBallCounts = { "autoBattle", "autoCatch" },
+  autoCatchNewOnly = "autoCatch",
+  autoCatchTarget = "autoCatch",
+  autoCatchBall = "autoCatch",
+  showBallCounts = "autoCatch",
   autoStopLowHp = "autoBattle",
-  autoStopNoBalls = { "autoBattle", "autoCatch" },
-  autoStopTarget = { "autoBattle", "autoCatch", "autoCatchTarget" },
+  autoStopNoBalls = "autoCatch",
+  autoStopTarget = "autoCatchTarget",
   autoPauseNewEntry = "autoBattle",
   autoPauseEvolution = "autoBattle",
   partyOrder = "partyOverview",
@@ -253,43 +253,21 @@ local expectedVisibility = {
   autoPartyOrder = "partyOverview",
 }
 visibilityHas = function(condition, key)
-  if not condition then return false end
-  if condition.key == key and condition.equals == true then return true end
-  for _, child in ipairs(condition.all or {}) do
-    if visibilityHas(child, key) then return true end
-  end
-  return false
+  if type(condition) ~= "table" then return false end
+  return condition.key == key and condition.equals == true
 end
-local function isVisible(row, values)
-  local function valueFor(key, default)
-    local value = values[key]
-    if value == nil then
-      local source = byKey[key]
-      if source then value = source.default end
-    end
-    if value == nil then return default end
-    return value
-  end
-  local releaseVisibility = run.loader.exports[MOD_ID].optionVisibility
-  return releaseVisibility.visible(row and row.visibleIf, valueFor)
-end
-T.check(not isVisible(byKey.autoCatchTarget,
-    { autoBattle = true, autoCatch = false }),
-  "AUTO CATCH TARGET remains hidden while catching is disabled")
-for optionKey, parents in pairs(expectedVisibility) do
-  if type(parents) == "string" then parents = { parents } end
-  local condition = byKey[optionKey].visibleIf
-  for _, parentKey in ipairs(parents) do
-    T.check(visibilityHas(condition, parentKey),
-      "dependent option " .. optionKey .. " is conditional on " .. parentKey)
-  end
+T.check(visibilityHas(byKey.autoCatchTarget.visible_if, "autoCatch"),
+  "AUTO CATCH TARGET is gated by its direct parent AUTO CATCH")
+for optionKey, parentKey in pairs(expectedVisibility) do
+  T.check(visibilityHas(byKey[optionKey].visible_if, parentKey),
+    "dependent option " .. optionKey .. " is conditional on " .. parentKey)
 end
 end
 
 local exports = run.loader.exports[MOD_ID]
 local hooks = run.loader.hooks
 T.check(type(exports) == "table", "package exports a feature manifest")
-T.eq(#exports.features, 28, "all runtime modules are loaded")
+T.eq(#exports.features, 27, "all runtime modules are loaded")
 T.check(type(exports.overlayLayout.positions) == "function",
   "shared overlay layout helper is exported")
 T.check(type(exports.overlayLayout.trackerRect) == "function",
@@ -374,22 +352,19 @@ T.check(type(exports.autoBattle.catchBallMode) == "function",
 T.check(type(exports.autoCatchTarget.matches) == "function",
   "AUTO CATCH TARGET helper remains exported")
 local catchTargetSchema = byKey.autoCatchTarget
-T.check(visibilityHas(catchTargetSchema.visibleIf, "autoBattle")
-  and visibilityHas(catchTargetSchema.visibleIf, "autoCatch"),
-  "AUTO CATCH TARGET is hidden until AUTO BATTLE and AUTO CATCH are enabled")
+T.check(visibilityHas(catchTargetSchema.visible_if, "autoCatch"),
+  "AUTO CATCH TARGET is gated by its direct parent AUTO CATCH")
 local catchNewSchema = byKey.autoCatchNewOnly
-T.check(visibilityHas(catchNewSchema.visibleIf, "autoBattle")
-  and visibilityHas(catchNewSchema.visibleIf, "autoCatch"),
-  "CATCH NEW ONLY is hidden until AUTO BATTLE and AUTO CATCH are enabled")
+T.check(visibilityHas(catchNewSchema.visible_if, "autoCatch"),
+  "CATCH NEW ONLY is gated by its direct parent AUTO CATCH")
 local catchBallSchema = byKey.autoCatchBall
-T.check(visibilityHas(catchBallSchema.visibleIf, "autoBattle")
-  and visibilityHas(catchBallSchema.visibleIf, "autoCatch"),
-  "AUTO CATCH BALL is hidden until AUTO BATTLE and AUTO CATCH are enabled")
+T.check(visibilityHas(catchBallSchema.visible_if, "autoCatch"),
+  "AUTO CATCH BALL is gated by its direct parent AUTO CATCH")
 T.eq(#catchBallSchema.choices, 3,
   "AUTO CATCH BALL exposes three ball-selection choices")
-T.check(byKey.floatingMenus.visibleIf == nil,
+T.check(byKey.floatingMenus.visible_if == nil,
   "FLOATING MENUS is always available")
-T.check(byKey.pokedexFilters.visibleIf == nil,
+T.check(byKey.pokedexFilters.visible_if == nil,
   "POKEDEX FILTERS is always available")
 T.check(type(exports.moveEffectiveness.moveEffectiveness) == "function",
   "native effectiveness helper remains exported")

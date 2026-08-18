@@ -58,41 +58,34 @@ end
 
 local function visibilityHas(condition, key)
   if type(condition) ~= "table" then return false end
-  if condition.key == key then return true end
-  for _, childKey in ipairs({ "all", "any" }) do
-    for _, child in ipairs(condition[childKey] or {}) do
-      if visibilityHas(child, key) then return true end
-    end
-  end
-  return false
+  return condition.key == key and condition.equals == true
 end
 
-T.check(visibilityHas(byKey.autoCatch.visibleIf, "autoBattle"),
+T.check(visibilityHas(byKey.autoCatch.visible_if, "autoBattle"),
   "Gold AUTO CATCH is gated by AUTO BATTLE")
-T.check(not visibilityHas(byKey.encounterTrackerCorner.visibleIf, "minimap")
-  and visibilityHas(byKey.encounterTrackerCorner.visibleIf, "encounterTracker"),
+T.check(not visibilityHas(byKey.encounterTrackerCorner.visible_if, "minimap")
+  and visibilityHas(byKey.encounterTrackerCorner.visible_if, "encounterTracker"),
   "Gold TRACKER CORNER is gated by ENCOUNTER TRACKER without MINIMAP")
-T.check(visibilityHas(byKey.partyOverviewCorner.visibleIf, "partyOverview"),
+T.check(visibilityHas(byKey.partyOverviewCorner.visible_if, "partyOverview"),
   "Gold PARTY CORNER is gated by PARTY OVERVIEW")
 for _, key in ipairs({ "autoCatchNewOnly", "autoCatchTarget", "autoCatchBall", "showBallCounts" }) do
-  T.check(visibilityHas(byKey[key].visibleIf, "autoBattle")
-    and visibilityHas(byKey[key].visibleIf, "autoCatch"),
-    "Gold " .. key .. " is gated by AUTO BATTLE and AUTO CATCH")
+  T.check(visibilityHas(byKey[key].visible_if, "autoCatch"),
+    "Gold " .. key .. " is gated by its direct parent AUTO CATCH")
 end
 for _, key in ipairs({
   "encounterTrackerTime", "encounterTrackerSwarms", "encounterTrackerRoaming",
   "encounterTrackerRare", "encounterTrackerHeadbutt",
   "encounterTrackerRockSmash", "encounterTrackerContest",
 }) do
-  T.check(not visibilityHas(byKey[key].visibleIf, "minimap")
-    and visibilityHas(byKey[key].visibleIf, "encounterTracker"),
+  T.check(not visibilityHas(byKey[key].visible_if, "minimap")
+    and visibilityHas(byKey[key].visible_if, "encounterTracker"),
     "Gold " .. key .. " is gated by ENCOUNTER TRACKER without MINIMAP")
 end
-T.check(byKey.eggTracker.visibleIf == nil,
+T.check(byKey.eggTracker.visible_if == nil,
   "Gold EGG TRACKER is a direct PARTY category toggle")
 
 local exports = run.loader.exports[MOD_ID]
-T.check(type(exports) == "table" and #exports.features == 28,
+T.check(type(exports) == "table" and #exports.features == 27,
   "Gold loads every QoL Suite runtime module")
 for _, helper in ipairs({
   "autoBattle", "autoCatchTarget", "encounterTracker", "encounterRate",

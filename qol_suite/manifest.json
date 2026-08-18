@@ -1,7 +1,7 @@
 {
   "id": "qol_suite",
   "name": "QoL Suite",
-  "version": "1.0.0",
+  "version": "1.2.0",
   "github": "ainen/qol_suite",
   "api": 2,
   "entry": "main.lua",
@@ -11,7 +11,7 @@
   "category": "UI",
   "games": ["gen1", "gen2"],
   "gen2compat": true,
-  "game_version": ">=0.1.91 <0.2.0",
+  "game_version": ">=0.1.95 <0.3.0",
   "priority": 100,
   "permissions": ["engine_internals"],
   "dependencies": [],

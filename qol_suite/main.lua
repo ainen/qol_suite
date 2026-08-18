@@ -37,10 +37,10 @@ local function loadFeature(relativePath, ...)
   return mod.exports
 end
 
--- Supported 0.1.x releases use a flat schema but do not evaluate visibleIf
--- metadata. Add dependent-row filtering to the in-game manager.
-local optionVisibilityExports = loadFeature(
-  "features/option_visibility.lua", optionSchema)
+-- Dependent-row visibility is native: each option row declares a single-parent
+-- visible_if condition and the engine's manager (v0.1.95+) hides it and
+-- refreshes the list when its parent changes. No runtime shim is required.
+
 
 -- The Dramatic Shape family helper must load first so the XP bar and caught
 -- marker can follow the HUD panels into those mods' world canvas.
@@ -86,7 +86,6 @@ local floatingMenusExports = loadFeature("features/floating_menus.lua")
 
 mod.exports = {
   packageId = "qol_suite",
-  optionVisibility = optionVisibilityExports,
   moveEffectiveness = effectivenessExports,
   moveFreedom = moveFreedomExports,
   experienceBar = experienceBarExports,
@@ -112,7 +111,6 @@ mod.exports = {
   battleTeardown = battleTeardownExports,
   floatingMenus = floatingMenusExports,
   features = {
-    "option_visibility",
     "voxel_hud",
     "overlay_layout",
     "gen3_ui_compat",
