@@ -227,10 +227,6 @@ both engines, then builds and publishes `qol_suite-<version>.zip` plus
 
 QoL Suite builds on work by the community and the Gen 1 Recompilation Project:
 
-- **Pokemon Move Effectiveness Native** — native move-effectiveness display
-- **Pokemon Move Freedom** — outside-battle move swapping
-- **Pokemon Naming Enhancements** — naming quality-of-life flows
-- **Pokemon Party Lead** — party-lead action
 - **Gen 1 Recompilation Project** — the mod API, UI hooks, and engine
 
 ## License
