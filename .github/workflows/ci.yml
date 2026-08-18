@@ -103,3 +103,88 @@ jobs:
             --output "dist/qol_suite-${version}.zip" \
             --version "$version"
           unzip -l "dist/qol_suite-${version}.zip"
+
+  upstream-coverage:
+    name: Upstream coverage
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout QoL Suite
+        uses: actions/checkout@v4
+
+      # Fail loudly when the compatibility matrix stops tracking upstream:
+      # the floor must equal the manifest minimum and the newest in-range
+      # upstream release must be a matrix cell. Bump the matrix (and the
+      # manifest floor, if the mod gains new requirements) together.
+      - name: Check matrix against upstream tags
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          import re
+          import subprocess
+          import sys
+
+          with open("qol_suite/manifest.json", encoding="utf-8") as fh:
+              game_version = json.load(fh).get("game_version", "")
+          m = re.search(r">=\s*([0-9.]+)\s*<\s*([0-9.]+)", game_version)
+          if not m:
+              sys.exit(f"::error::cannot parse supported range {game_version!r}")
+          floor, ceiling = m.group(1), m.group(2)
+
+          ci = open(".github/workflows/ci.yml", encoding="utf-8").read()
+          cell = re.search(r"engine_ref:\s*\[([^\]]+)\]", ci)
+          if not cell:
+              sys.exit("::error::engine_ref matrix not found in ci.yml")
+          tested = [t.strip() for t in cell.group(1).split(",") if t.strip()]
+
+          def key(tag):
+              try:
+                  return tuple(int(p) for p in tag.lstrip("v").split("."))
+              except ValueError:
+                  return None
+
+          def within(tag):
+              k = key(tag)
+              return k is not None and key(floor) <= k < key(ceiling)
+
+          errors = []
+          if not tested:
+              errors.append("engine_ref matrix is empty")
+          for t in tested:
+              if key(t) is None:
+                  errors.append(f"matrix entry {t!r} is not vX.Y.Z")
+              elif not within(t):
+                  errors.append(f"matrix entry {t} is outside the supported range >= {floor} < {ceiling}")
+          if key(floor) not in {key(t) for t in tested}:
+              errors.append(f"matrix is missing the floor {floor}; CI no longer proves the minimum supported engine")
+          # git ls-remote does NOT honor --sort (not part of the protocol), so
+          # pick the newest in-range tag client-side. Normalize the ref: some
+          # git builds emit "refs/tags/vX.Y.Z" and others "vX.Y.Z".
+          newest_in_range = None
+          try:
+              out = subprocess.run(
+                  ["git", "ls-remote", "--tags",
+                   "https://github.com/bryanthaboi/gen1recomp"],
+                  capture_output=True, text=True, timeout=60).stdout
+              tags = []
+              for line in out.splitlines():
+                  if not line.strip():
+                      continue
+                  name = line.split()[-1]
+                  if name.startswith("refs/tags/"):
+                      name = name[len("refs/tags/"):]
+                  tags.append(name)
+          except Exception as exc:
+              errors.append(f"could not list upstream gen1recomp tags: {exc}")
+              tags = []
+          for t in tags:
+              if within(t) and (newest_in_range is None or key(t) > key(newest_in_range)):
+                  newest_in_range = t
+          if newest_in_range is not None and newest_in_range not in tested:
+              errors.append(f"upstream {newest_in_range} (newest in-range release) is not in the matrix; add it to engine_ref in ci.yml")
+          if errors:
+              for e in errors:
+                  print(f"::error::{e}")
+              sys.exit(1)
+          print(f"OK: CI tests the supported range >= {floor} < {ceiling} (floor {floor}, newest in-range {newest_in_range or 'n/a'})")
+          PY
