@@ -20,7 +20,7 @@ jobs:
         # Native option-row visible_if requires engine >=0.1.95, so the
         # supported floor is the lowest tested engine; the newest release
         # is the highest.
-        engine_ref: [v0.1.95, v0.2.7]
+        engine_ref: [v0.1.95, v0.2.9]
 
     steps:
       - name: Checkout QoL Suite
