@@ -19,7 +19,7 @@ outside the supported range.
 |---|---|
 | **Mod version** | 1.3.0 |
 | **Supported engine** | gen1recomp `>=0.1.95 <0.3.0` |
-| **Newest tested engine** | **v0.2.9** (the current gen1recomp release) |
+| **Newest tested engine** | **v0.2.10** (the current gen1recomp release) |
 | **Minimum engine** | **v0.1.95** (the first release with native option-row `visible_if`) |
 | **Games** | Red, Blue, Yellow (Gen 1) and Gold |
 
@@ -32,7 +32,7 @@ The engine range matters for two reasons:
   **no custom visibility shim** — the in-game manager and the pre-game launcher
   stay in sync, and dependent rows never appear orphaned.
 - **`>=0.1.95 <0.3.0`** — the floor is v0.1.95 (native `visible_if`), and the
-  range is tested against both the floor and the current release (**v0.2.9**).
+  range is tested against both the floor and the current release (**v0.2.10**).
 
 **Gen 1 vs Gold.** The option set adapts to the game:
 
@@ -216,7 +216,7 @@ Red/Blue/Yellow and `gold_compatibility_test` targets Gold.
 `.github/workflows/ci.yml` runs on every push and does three things:
 
 1. **Tests the supported engine range** — the `engine_ref` matrix (currently
-   `v0.1.95` and `v0.2.9`), cloning gen1recomp at each, live-mounting the mod,
+   `v0.1.95` and `v0.2.10`), cloning gen1recomp at each, live-mounting the mod,
    and running the headless suite.
 2. **Standalone feature tests** — the full suite on the newest engine.
 3. **Upstream coverage** — fails loudly if the matrix stops tracking upstream:

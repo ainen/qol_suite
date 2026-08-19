@@ -84,7 +84,7 @@ Tests are plain LuaJIT scripts; a test passes only if the process exits `0`. Two
 
 `.github/workflows/ci.yml` runs on every push and does three things:
 
-1. **Tests the supported engine range** — the `engine_ref` matrix (currently `v0.1.95` and `v0.2.9`), cloning gen1recomp at each, live-mounting the mod, and running the headless suite.
+1. **Tests the supported engine range** — the `engine_ref` matrix (currently `v0.1.95` and `v0.2.10`), cloning gen1recomp at each, live-mounting the mod, and running the headless suite.
 2. **Standalone feature tests** — the full suite on the newest engine.
 3. **Upstream coverage** — fails loudly if the matrix stops tracking upstream: it reads the manifest range and the matrix, then errors if the floor isn't tested, a cell is out of range, or the newest in-range upstream release is missing. This is the tripwire that stops the matrix from silently going stale.
 
