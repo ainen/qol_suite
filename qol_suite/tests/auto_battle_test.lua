@@ -258,11 +258,24 @@ for iteration = 1, 100 do
   stack.states = { battle, choice }
   battle.waitingUI = true
   T.check(exports.advance(battle),
-    "AUTO BATTLE accepts battle choice " .. iteration)
-  T.eq(chosen, true,
-    "AUTO BATTLE accepts the affirmative battle choice " .. iteration)
+    "AUTO BATTLE resolves the trainer SHIFT prompt " .. iteration)
+  T.eq(chosen, false,
+    "AUTO BATTLE declines the trainer SHIFT prompt, keeping its mon " .. iteration)
   T.eq(#stack.states, 1,
-    "AUTO BATTLE closes the battle choice box " .. iteration)
+    "AUTO BATTLE closes the SHIFT prompt " .. iteration)
+
+  -- A wild "Use next POKéMON?" prompt must still be answered YES so the
+  -- battle continues instead of attempting to run.
+  local wildBattle2 = battleWith(20, "wild")
+  wildBattle2.game.stack = stack
+  local wildChosen
+  local wildChoice = { onChoose = function(yes) wildChosen = yes end }
+  stack.states = { wildBattle2, wildChoice }
+  wildBattle2.waitingUI = true
+  T.check(exports.advance(wildBattle2),
+    "AUTO BATTLE resolves the wild 'Use next' prompt " .. iteration)
+  T.eq(wildChosen, true,
+    "AUTO BATTLE stays in the wild battle on 'Use next' " .. iteration)
 
   local poolChoice
   local poolPrompt = { _qolSuiteMovePoolPrompt = true }

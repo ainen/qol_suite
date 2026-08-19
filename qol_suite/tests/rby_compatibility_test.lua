@@ -35,7 +35,7 @@ for _, key in ipairs({ "experienceBar", "caughtIndicator" }) do
   T.check(keys[key] == true, version .. " exposes Gen 1 option " .. key)
 end
 for _, key in ipairs({
-  "autoStopShiny", "encounterTrackerTime", "encounterTrackerSwarms",
+  "autoStopShiny", "catchShinyOnly", "encounterTrackerTime", "encounterTrackerSwarms",
   "encounterTrackerRoaming", "encounterTrackerRare", "encounterTrackerHeadbutt",
   "encounterTrackerRockSmash", "encounterTrackerContest", "eggTracker",
 }) do

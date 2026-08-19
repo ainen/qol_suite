@@ -17,7 +17,7 @@ outside the supported range.
 
 | | |
 |---|---|
-| **Mod version** | 1.2.0 |
+| **Mod version** | 1.3.0 |
 | **Supported engine** | gen1recomp `>=0.1.95 <0.3.0` |
 | **Newest tested engine** | **v0.2.6** (the current gen1recomp release) |
 | **Minimum engine** | **v0.1.95** (the first release with native option-row `visible_if`) |
@@ -38,10 +38,10 @@ The engine range matters for two reasons:
 
 - **Gen 1 (Red/Blue/Yellow):** `XP BAR` and `CAUGHT MARKER` are available (Gold
   has its own native versions, so those two are hidden there).
-- **Gold:** `STOP ON SHINY`, `EGG TRACKER`, and the extra encounter-tracker
-  detail rows (`SHOW TIME OF DAY`, `SHOW SWARMS`, `SHOW ROAMING`, `SHOW RARE`,
-  `SHOW HEADBUTT`, `SHOW ROCK SMASH`, `SHOW BUG CONTEST`) are available; they
-  are hidden in Gen 1.
+- **Gold:** `STOP ON SHINY`, `CATCH SHINY ONLY`, `EGG TRACKER`, and the extra
+  encounter-tracker detail rows (`SHOW TIME OF DAY`, `SHOW SWARMS`, `SHOW
+  ROAMING`, `SHOW RARE`, `SHOW HEADBUTT`, `SHOW ROCK SMASH`, `SHOW BUG
+  CONTEST`) are available; they are hidden in Gen 1.
 
 **Renderer compatibility.** The Gen 1 XP bar and caught marker follow the
 battle layout when `DRAMALESS_SHAPE`, `PotatoVoxel`, or `BATTLE ART VOXEL FORK`
@@ -79,6 +79,9 @@ parent) hide automatically until the parent is enabled.
   and throws a Poké Ball. Requires AUTO BATTLE.
 - **CATCH NEW ONLY** — Makes AUTO CATCH skip species already registered as
   caught. Requires AUTO CATCH.
+- **CATCH SHINY ONLY** *(Gold only)* — Makes AUTO CATCH fire only against a
+  shiny wild Pokémon; non-shiny encounters decline the catch. Requires AUTO
+  CATCH.
 - **AUTO CATCH TARGET** — Limits AUTO CATCH to one species selected in the
   Pokédex. Requires AUTO CATCH.
 - **AUTO CATCH BALL** — Uses the best ball, worst ball, or Poké Balls only.
@@ -97,6 +100,9 @@ parent) hide automatically until the parent is enabled.
 ### Automation (Gold)
 
 - **STOP ON SHINY** *(Gold only)* — Pauses AUTO BATTLE on a shiny encounter.
+  Requires AUTO BATTLE.
+- **CATCH SHINY ONLY** *(Gold only)* — AUTO CATCH fires only against a shiny
+  wild Pokémon. Requires AUTO CATCH.
 
 ### Field and bag
 

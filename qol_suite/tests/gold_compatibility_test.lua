@@ -20,7 +20,7 @@ local MOD_ID = "qol_suite"
 T.eq(#run.errors, 0, "Gold package load is clean (" .. tostring(run.errors[1]) .. ")")
 
 local schema = run.loader.optionSchemas[MOD_ID]
-T.eq(#schema, 60, "Gold exposes the complete flat 0.1.x schema")
+T.eq(#schema, 61, "Gold exposes the complete flat 0.1.x schema")
 local keys, byKey = {}, {}
 for _, row in ipairs(schema) do
   keys[row.key] = true
@@ -37,6 +37,7 @@ for _, key in ipairs({
   "effectiveness", "lowHealthAlarm", "expShare", "autoBattle",
   "autoCatch", "autoCatchNewOnly", "autoCatchTarget", "autoCatchBall", "showBallCounts",
   "autoStopShiny", "autoStopLowHp", "autoStopNoBalls", "autoStopTarget",
+  "catchShinyOnly",
   "autoPauseNewEntry", "autoPauseEvolution", "fieldAbilities",
   "fieldAbilitiesAuto", "hmWithoutTeaching", "skipCenterDialogue", "encounterRate", "minimap", "minimapCorner",
   "minimapTransparency", "minimapSize", "minimapZoom", "minimapBorder",
@@ -68,6 +69,8 @@ T.check(not visibilityHas(byKey.encounterTrackerCorner.visible_if, "minimap")
   "Gold TRACKER CORNER is gated by ENCOUNTER TRACKER without MINIMAP")
 T.check(visibilityHas(byKey.partyOverviewCorner.visible_if, "partyOverview"),
   "Gold PARTY CORNER is gated by PARTY OVERVIEW")
+T.check(visibilityHas(byKey.catchShinyOnly.visible_if, "autoCatch"),
+  "Gold CATCH SHINY ONLY is gated by its direct parent AUTO CATCH")
 for _, key in ipairs({ "autoCatchNewOnly", "autoCatchTarget", "autoCatchBall", "showBallCounts" }) do
   T.check(visibilityHas(byKey[key].visible_if, "autoCatch"),
     "Gold " .. key .. " is gated by its direct parent AUTO CATCH")
@@ -109,7 +112,26 @@ goldCaughtBattle.game.save.pokedex.caught = {}
 T.check(exports.autoBattle.catchNewOnlyAllowed(
   goldCaughtBattle, goldCaughtBattle.game),
   "Gold CATCH NEW ONLY allows a new species")
+
+-- CATCH SHINY ONLY: the opposite policy of STOP ON SHINY. When on, auto-catch
+-- fires only against a shiny enemy; a non-shiny enemy declines the catch so
+-- the normal auto-battle loop continues.
+local shinyBattle = { enemy = { species = "FIXMON_A", shiny = true } }
+local nonShinyBattle = { enemy = { species = "FIXMON_A" } }
+run.loader.modOptions[MOD_ID] = {
+  autoBattle = true, autoCatch = true, catchShinyOnly = true,
+}
+T.check(exports.autoBattle.catchShinyOnlyAllowed(shinyBattle),
+  "Gold CATCH SHINY ONLY allows a shiny enemy")
+T.check(not exports.autoBattle.catchShinyOnlyAllowed(nonShinyBattle),
+  "Gold CATCH SHINY ONLY declines a non-shiny enemy")
+run.loader.modOptions[MOD_ID] = {
+  autoBattle = true, autoCatch = true, catchShinyOnly = false,
+}
+T.check(exports.autoBattle.catchShinyOnlyAllowed(nonShinyBattle),
+  "Gold CATCH SHINY ONLY is inert when off (allows any enemy)")
 run.loader.modOptions[MOD_ID] = nil
+
 T.check(type(exports.eggTracker.snapshot) == "function",
   "Gold exposes the egg tracker snapshot helper")
 T.check(type(exports.encounterTracker.collect) == "function",

@@ -21,6 +21,7 @@ return function(mod, catchTarget, compat)
   local AUTO_CATCH_BALL = "autoCatchBall"
   local SHOW_BALL_COUNTS = "showBallCounts"
   local AUTO_STOP_SHINY = "autoStopShiny"
+  local CATCH_SHINY_ONLY = "catchShinyOnly"
   local AUTO_STOP_LOW_HP = "autoStopLowHp"
   local AUTO_STOP_NO_BALLS = "autoStopNoBalls"
   local AUTO_STOP_TARGET = "autoStopTarget"
@@ -247,6 +248,17 @@ return function(mod, catchTarget, compat)
     local enemy = model and model.enemy
     if isGen1 then enemy = enemy and enemy.mon end
     return not (enemy and speciesCaught(owner, enemy.species))
+  end
+
+  -- CATCH SHINY ONLY is a Gold-only AUTO CATCH gate. When on, auto-catch only
+  -- fires against a shiny wild Pokemon; any non-shiny enemy declines the
+  -- catch so the normal auto-battle loop continues. It is the opposite policy
+  -- of STOP ON SHINY (which pauses automation on a shiny). In RBY the option
+  -- is never registered, so this helper is inert there.
+  local function catchShinyOnlyAllowed(battle, state)
+    if mod.options:get(CATCH_SHINY_ONLY) ~= true then return true end
+    local enemy = battle and battle.enemy
+    return not (not enemy or not enemy.shiny)
   end
 
   -- Gold and Gen 1 both emit this after the caught mon has been stored.  Keep
@@ -601,22 +613,38 @@ return function(mod, catchTarget, compat)
     end
     if not battle.waitingUI then return false end
     -- BattleState's direct ChoiceBox callbacks are the only choice UI that
-    -- can be active while AUTO BATTLE is waiting. Choose YES so trainer SHIFT
-    -- prompts and wild "use next Pokemon" prompts never require input.
+    -- can be active while AUTO BATTLE is waiting.
     if type(stack.pop) == "function" and type(top.onChoose) == "function" then
       local states = type(stack.states) == "table" and stack.states or {}
       local below = states[#states - 1]
       -- The catch nickname question is a TextBox-owned choice. Selecting NO
-      -- keeps AUTO CATCH from opening a NamingScreen, while direct battle
-      -- choices (wild replacement / trainer SHIFT) still select YES.
+      -- keeps AUTO CATCH from opening a NamingScreen.
       -- The SWAP MOVES prompt is also TextBox-owned, but its text box does not
       -- carry the generic isTextBox marker. Identify it by the explicit mod
       -- marker so AUTO BATTLE does not open the immediate-swap picker.
       local poolPrompt = below and below._qolSuiteMovePoolPrompt
-      local yes = not poolPrompt
-        and not (battle.blankForAskName and below and below.isTextBox)
+      if poolPrompt then
+        if not stackPop(stack) then return false end
+        top.onChoose(false)
+        return true
+      end
+      if battle.blankForAskName and below and below.isTextBox then
+        if not stackPop(stack) then return false end
+        top.onChoose(false)
+        return true
+      end
+      -- Trainer SHIFT: "Will X change POKéMON?" — YES opens the party menu,
+      -- NO keeps the current mon.  AUTO BATTLE already chose the current mon
+      -- as best, so decline the switch to avoid a wasted turn and the
+      -- spurious swap-to-first-then-back cycle.
+      -- Wild "Use next POKéMON?" — YES stays in the battle, NO attempts to
+      -- run.  Answer YES to keep automating.
+      -- In a trainer battle the only remaining ChoiceBox is the SHIFT prompt;
+      -- in a wild battle it is the "Use next" prompt.  The battle kind
+      -- cleanly distinguishes them.
+      local answer = (wildBattle(battle) == true)
       if not stackPop(stack) then return false end
-      top.onChoose(yes)
+      top.onChoose(answer)
       return true
     end
     return false
@@ -891,7 +919,8 @@ return function(mod, catchTarget, compat)
     end
     if catchEnabled() and battle.wild and not state.contest
         and not state.tutorial and goldCatchTargetMatches(state)
-        and catchNewOnlyAllowed(battle, state.game) then
+        and catchNewOnlyAllowed(battle, state.game)
+        and catchShinyOnlyAllowed(battle, state) then
       if safetyOption(AUTO_STOP_NO_BALLS) and not goldAvailableBall(state) then
         pauseAutomation("no balls", state)
         return nil
@@ -1349,6 +1378,7 @@ return function(mod, catchTarget, compat)
     end,
     catchEnabled = catchEnabled,
     catchNewOnlyAllowed = catchNewOnlyAllowed,
+    catchShinyOnlyAllowed = catchShinyOnlyAllowed,
     catchBallMode = catchBallMode,
     ballCounts = ballCounts,
     formatBallCounts = formatBallCounts,

@@ -171,6 +171,13 @@ else
     key = "autoStopShiny", label = "STOP ON SHINY", type = "toggle",
     default = false, visible_if = when("autoBattle", true),
   })
+  -- CATCH SHINY ONLY is a Gold-only AUTO CATCH gate: when on, AUTO CATCH
+  -- only fires against a shiny wild Pokemon. It mirrors STOP ON SHINY (the
+  -- opposite policy) and sits under AUTO CATCH so it hides with it.
+  insertAfter("autoCatch", {
+    key = "catchShinyOnly", label = "CATCH SHINY ONLY", type = "toggle",
+    default = false, visible_if = when("autoCatch", true),
+  })
   insertAfter("partyOverview", {
     key = "eggTracker", label = "EGG TRACKER", type = "toggle", default = false,
   })

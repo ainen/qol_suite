@@ -6,7 +6,7 @@ Everything is **opt-in and reversible**: the mod installs as a single package, e
 
 | | |
 |---|---|
-| **Version** | 1.2.0 |
+| **Version** | 1.3.0 |
 | **Engine** | gen1recomp `>=0.1.95 <0.3.0` |
 | **Games** | Red, Blue, Yellow (Gen 1) and Gold |
 | **Features** | 27 (Gen 1 and Gold share most; a few are version-specific) |
@@ -17,7 +17,7 @@ Everything is **opt-in and reversible**: the mod installs as a single package, e
 QoL Suite groups small, well-scoped improvements that are otherwise hard to combine. Highlights:
 
 - **Battle** — type-matchup readout, move swapping with PP retention, optional EXP sharing, an XP bar and caught-marker (Gen 1), low-health alarm control.
-- **Automation** — an optional auto-battle loop with safety stops (low HP, shiny, out of balls, a chosen target species), auto-catch with ball selection, and pause-on-new-Pokédex-entry / evolution.
+- **Automation** — an optional auto-battle loop with safety stops (low HP, shiny, out of balls, a chosen target species), auto-catch with ball selection, pause-on-new-Pokédex-entry / evolution, and (Gold) **CATCH SHINY ONLY** to restrict auto-catch to shiny wild Pokémon.
 - **Field & bag** — direct HM use, reusable TMs, quick field moves, shorter Center healing, bag categories/search/sort/quick-use, and a tunable encounter-rate multiplier.
 - **Overworld panels** — a compact party overview with ordering, an encounter tracker, a configurable minimap with Pokédex habitat tracking, and Gold's egg tracker — each with corner placement.
 - **Interface** — Pokédex filters, floating menus (keep the world visible under menus), and naming controls (skip the catch-nickname prompt, rename anywhere, NPC-trade renaming).
@@ -48,7 +48,7 @@ Many options depend on a parent feature. The mod declares this with the engine's
 The option set adapts to the game:
 
 - **Gen 1 (Red/Blue/Yellow):** `XP BAR` and `CAUGHT MARKER` appear.
-- **Gold:** `STOP ON SHINY`, `EGG TRACKER`, and the extra encounter-tracker detail rows (time of day, swarms, roaming, rare, headbutt, rock smash, bug contest) appear.
+- **Gold:** `STOP ON SHINY`, `CATCH SHINY ONLY` (auto-catch only shiny wild Pokémon), `EGG TRACKER`, and the extra encounter-tracker detail rows (time of day, swarms, roaming, rare, headbutt, rock smash, bug contest) appear.
 
 ## Features
 
@@ -65,7 +65,7 @@ The option set adapts to the game:
 | **Interface** | Pokédex Filters, Floating Menus, Gen 3 UI Compatibility, Voxel HUD, Overlay Layout |
 | **Naming** | Naming Enhancements (skip catch-name, rename anywhere, NPC-trade rename) |
 
-\* Gen 1 only. Gold adds `STOP ON SHINY` and `EGG TRACKER`.
+\* Gen 1 only. Gold adds `STOP ON SHINY`, `CATCH SHINY ONLY`, and `EGG TRACKER`.
 
 ## Development
 

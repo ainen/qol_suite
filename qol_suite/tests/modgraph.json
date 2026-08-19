@@ -121,6 +121,11 @@
       "then": { "autoBattle": true, "autoCatch": true }
     },
     {
+      "id": "catch-shiny-only-needs-auto-catch",
+      "if": { "catchShinyOnly": true },
+      "then": { "autoBattle": true, "autoCatch": true }
+    },
+    {
       "id": "auto-catch-target-needs-auto-catch",
       "if": { "autoCatchTarget": true },
       "then": { "autoBattle": true, "autoCatch": true }

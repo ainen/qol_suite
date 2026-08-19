@@ -1,7 +1,7 @@
 {
   "id": "qol_suite",
   "name": "QoL Suite",
-  "version": "1.2.0",
+  "version": "1.3.0",
   "github": "ainen/qol_suite",
   "api": 2,
   "entry": "main.lua",

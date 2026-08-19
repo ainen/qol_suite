@@ -1,5 +1,17 @@
 # Changelog
 
+## 1.3.0 - 2026-08-18
+
+- Added **CATCH SHINY ONLY** (Gold-only, under AUTO CATCH): when enabled,
+  AUTO CATCH fires only against a shiny wild Pokémon; non-shiny encounters
+  decline the catch and the normal auto-battle loop continues. The opposite
+  policy of STOP ON SHINY (which pauses automation on a shiny).
+- Fixed AUTO BATTLE swap-in bug: when a trainer swaps Pokémon the engine
+  shows a "change POKéMON?" prompt; the mod now declines it (NO) instead of
+  accepting (YES), which previously opened the party menu and swapped to the
+  first party member. Wild-battle "Use next POKéMON?" prompts still answer YES
+  (stay in battle) as before.
+
 ## 1.2.0 - 2026-08-17
 
 - Added gen1recomp v0.2.x compatibility by widening the supported engine
