@@ -21,14 +21,14 @@ local byKey, visibilityHas
 do
 local schema = run.loader.optionSchemas[MOD_ID]
 local leaves = schema
-T.eq(#schema, 53, "0.1.x receives every RBY setting in one flat list")
+T.eq(#schema, 54, "0.1.x receives every RBY setting in one flat list")
 local keys = {}
 for _, row in ipairs(leaves) do keys[row.key] = true end
 for _, key in ipairs({
   "effectiveness", "swapMoves", "retainPP", "skipWildCatchNickname",
   "renameNpcTrades", "autoRenameTrades", "renameAnywhere", "restoreName",
   "toFront",
-  "lowHealthAlarm", "experienceBar", "caughtIndicator",
+  "lowHealthAlarm", "experienceBar", "caughtIndicator", "wallCollisionSound",
   "fieldAbilities", "fieldAbilitiesAuto", "hmWithoutTeaching", "skipCenterDialogue", "encounterRate", "bagCategories",
   "bagSearch", "bagAutoSort", "quickUseItems", "reusableTMs", "minimap",
   "minimapCorner", "minimapTransparency", "minimapSize", "minimapZoom",
@@ -69,6 +69,7 @@ local expectedLabels = {
   lowHealthAlarm = "LOW HEALTH ALARM",
   experienceBar = "XP BAR",
   caughtIndicator = "CAUGHT MARKER",
+  wallCollisionSound = "WALL BUMP SOUND",
   fieldAbilities = "QUICK FIELD MOVES",
   fieldAbilitiesAuto = "AUTO FIELD MOVES",
   hmWithoutTeaching = "USE HMs DIRECTLY",
@@ -123,6 +124,7 @@ T.check(run.loader.exports[MOD_ID].optionVisibility == nil,
   "dependent-row visibility is handled by the engine, not a shim")
 local expectedOrder = {
   "effectiveness", "lowHealthAlarm", "experienceBar", "caughtIndicator",
+  "wallCollisionSound",
   "expShare", "swapMoves", "retainPP", "autoBattle", "autoStopLowHp", "autoPauseNewEntry",
   "autoPauseEvolution", "autoCatch", "autoCatchNewOnly", "autoCatchTarget",
   "autoCatchBall", "showBallCounts", "autoStopNoBalls", "autoStopTarget",
@@ -152,6 +154,8 @@ T.check(byKey.experienceBar.default == true,
   "XP BAR is enabled by default")
 T.check(byKey.caughtIndicator.default == true,
   "CAUGHT MARKER is enabled by default")
+T.check(byKey.wallCollisionSound.default == true,
+  "WALL BUMP SOUND is enabled by default")
 T.check(byKey.fieldAbilities.default == true,
   "FIELD MOVES is enabled by default")
 T.check(byKey.fieldAbilitiesAuto.default == false,
@@ -267,7 +271,7 @@ end
 local exports = run.loader.exports[MOD_ID]
 local hooks = run.loader.hooks
 T.check(type(exports) == "table", "package exports a feature manifest")
-T.eq(#exports.features, 27, "all runtime modules are loaded")
+T.eq(#exports.features, 28, "all runtime modules are loaded")
 T.check(type(exports.overlayLayout.positions) == "function",
   "shared overlay layout helper is exported")
 T.check(type(exports.overlayLayout.trackerRect) == "function",

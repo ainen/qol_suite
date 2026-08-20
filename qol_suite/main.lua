@@ -59,6 +59,7 @@ loadFeature("features/party_lead.lua")
 local partyOverviewExports = loadFeature("features/party_overview.lua", overlayLayoutExports)
 local eggTrackerExports = loadFeature("features/egg_tracker.lua", overlayLayoutExports)
 loadFeature("features/low_health_alarm.lua")
+local wallBumpSoundExports = loadFeature("features/wall_bump_sound.lua")
 loadFeature("features/experience_bar.lua", voxelHud, gen3UICompat)
 local experienceBarExports = mod.exports
 loadFeature("features/caught_indicator.lua", voxelHud, gen3UICompat)
@@ -90,6 +91,7 @@ mod.exports = {
   moveFreedom = moveFreedomExports,
   experienceBar = experienceBarExports,
   caughtIndicator = caughtIndicatorExports,
+  wallBumpSound = wallBumpSoundExports,
   gen3UICompat = gen3UICompat,
   voxelHud = voxelHud,
   overlayLayout = overlayLayoutExports,
@@ -121,6 +123,7 @@ mod.exports = {
     "party_overview",
     "egg_tracker",
     "low_health_alarm",
+    "wall_bump_sound",
     "experience_bar",
     "caught_indicator",
     "field_abilities",

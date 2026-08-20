@@ -8,6 +8,7 @@
     { "id": "battle.player_hud", "mode": "wrap" },
     { "id": "core.update", "mode": "wrap" },
     { "id": "fieldmove.eligibility", "mode": "wrap" },
+    { "id": "movement.collision", "mode": "wrap" },
     { "id": "render.hud", "mode": "wrap" },
     { "id": "screen.render_visible", "mode": "wrap" },
     { "id": "script.command", "mode": "wrap" },
@@ -53,7 +54,8 @@
     { "id": "reusable_tms", "mode": "provide" },
     { "id": "skip_center_dialogue", "mode": "provide" },
     { "id": "tracking", "mode": "provide" },
-    { "id": "voxel_hud", "mode": "provide" }
+    { "id": "voxel_hud", "mode": "provide" },
+    { "id": "wall_bump_sound", "mode": "provide" }
   ],
   "resources": [
     "resource:file:qol_suite:options_schema.lua",
@@ -73,6 +75,7 @@
     "resource:file:qol_suite:features/gen3_ui_compat.lua",
     "resource:file:qol_suite:features/hm_without_teaching.lua",
     "resource:file:qol_suite:features/low_health_alarm.lua",
+    "resource:file:qol_suite:features/wall_bump_sound.lua",
     "resource:file:qol_suite:features/minimap.lua",
     "resource:file:qol_suite:features/move_effectiveness_native.lua",
     "resource:file:qol_suite:features/move_freedom.lua",
@@ -212,13 +215,13 @@
         "battle.exp_award", "battle.caught_marker_visible",
         "battle.low_health_alarm", "battle.overlay",
         "battle.player_hud", "core.update", "fieldmove.eligibility",
-        "render.hud", "ui.party.submenu", "ui.pokedex.actions",
+        "movement.collision", "render.hud", "ui.party.submenu", "ui.pokedex.actions",
         "mod.content.map_scripts", "mod.content.screens", "mod.input",
         "mod.options", "mod.save", "mod.ui", "mod.world",
         "caught_indicator", "encounter_rate", "encounter_tracker",
         "exp_share", "experience_bar", "field_abilities",
         "hm_without_teaching", "inventory_improvements", "low_health_alarm",
-        "minimap", "move_effectiveness", "move_freedom",
+        "wall_bump_sound", "minimap", "move_effectiveness", "move_freedom",
         "naming_enhancements", "overlay_layout", "party_lead",
         "party_overview", "pokedex_filters", "reusable_tms",
         "skip_center_dialogue", "tracking", "voxel_hud",
@@ -238,6 +241,7 @@
         "resource:file:qol_suite:features/gen3_ui_compat.lua",
         "resource:file:qol_suite:features/hm_without_teaching.lua",
         "resource:file:qol_suite:features/low_health_alarm.lua",
+        "resource:file:qol_suite:features/wall_bump_sound.lua",
         "resource:file:qol_suite:features/minimap.lua",
         "resource:file:qol_suite:features/move_effectiveness_native.lua",
         "resource:file:qol_suite:features/move_freedom.lua",
@@ -294,6 +298,10 @@
     },
     "headless/tests/skip_center_dialogue_test.lua": {
       "nodes": ["script.command", "world.nurse_heal.confirmation"]
+    },
+    "headless/tests/wall_bump_sound_test.lua": {
+      "nodes": ["core.update", "movement.collision", "wall_bump_sound",
+        "resource:file:qol_suite:features/wall_bump_sound.lua"]
     }
   }
 }

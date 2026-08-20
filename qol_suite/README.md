@@ -6,17 +6,17 @@ Everything is **opt-in and reversible**: the mod installs as a single package, e
 
 | | |
 |---|---|
-| **Version** | 1.3.0 |
+| **Version** | 1.4.0 |
 | **Engine** | gen1recomp `>=0.1.95 <0.3.0` |
 | **Games** | Red, Blue, Yellow (Gen 1) and Gold |
-| **Features** | 27 (Gen 1 and Gold share most; a few are version-specific) |
+| **Features** | 28 (Gen 1 and Gold share most; a few are version-specific) |
 | **Mod API** | 2 |
 
 ## What it does
 
 QoL Suite groups small, well-scoped improvements that are otherwise hard to combine. Highlights:
 
-- **Battle** — type-matchup readout, move swapping with PP retention, optional EXP sharing, an XP bar and caught-marker (Gen 1), low-health alarm control.
+- **Battle** — type-matchup readout, move swapping with PP retention, optional EXP sharing, an XP bar and caught-marker (Gen 1), low-health alarm control, and a Gen 1 wall-bump sound toggle.
 - **Automation** — an optional auto-battle loop with safety stops (low HP, shiny, out of balls, a chosen target species), auto-catch with ball selection, pause-on-new-Pokédex-entry / evolution, and (Gold) **CATCH SHINY ONLY** to restrict auto-catch to shiny wild Pokémon.
 - **Field & bag** — direct HM use, reusable TMs, quick field moves, shorter Center healing, bag categories/search/sort/quick-use, and a tunable encounter-rate multiplier.
 - **Overworld panels** — a compact party overview with ordering, an encounter tracker, a configurable minimap with Pokédex habitat tracking, and Gold's egg tracker — each with corner placement.
@@ -47,12 +47,12 @@ Many options depend on a parent feature. The mod declares this with the engine's
 
 The option set adapts to the game:
 
-- **Gen 1 (Red/Blue/Yellow):** `XP BAR` and `CAUGHT MARKER` appear.
+- **Gen 1 (Red/Blue/Yellow):** `XP BAR`, `CAUGHT MARKER`, and `WALL BUMP SOUND` appear.
 - **Gold:** `STOP ON SHINY`, `CATCH SHINY ONLY` (auto-catch only shiny wild Pokémon), `EGG TRACKER`, and the extra encounter-tracker detail rows (time of day, swarms, roaming, rare, headbutt, rock smash, bug contest) appear.
 
 ## Features
 
-27 features, listed by area. A few are version-specific.
+28 features, listed by area. A few are version-specific.
 
 | Area | Feature |
 |---|---|
@@ -61,7 +61,7 @@ The option set adapts to the game:
 | **Field** | Field Abilities (quick/auto field moves), HM without Teaching, Skip Center Dialogue, Encounter Rate |
 | **Party** | Party Lead, Party Overview (ordering), Egg Tracker (Gold) |
 | **Bag** | Bag Categories (search/sort/quick-use), Reusable TMs |
-| **Overworld** | Minimap, Tracking, Encounter Tracker |
+| **Overworld** | Minimap, Tracking, Encounter Tracker, Wall Bump Sound* |
 | **Interface** | Pokédex Filters, Floating Menus, Gen 3 UI Compatibility, Voxel HUD, Overlay Layout |
 | **Naming** | Naming Enhancements (skip catch-name, rename anywhere, NPC-trade rename) |
 
@@ -84,7 +84,7 @@ Tests are plain LuaJIT scripts; a test passes only if the process exits `0`. Two
 
 `.github/workflows/ci.yml` runs on every push and does three things:
 
-1. **Tests the supported engine range** — the `engine_ref` matrix (currently `v0.1.95` and `v0.2.10`), cloning gen1recomp at each, live-mounting the mod, and running the headless suite.
+1. **Tests the supported engine range** — the `engine_ref` matrix (currently `v0.1.95` and `v0.2.12`), cloning gen1recomp at each, live-mounting the mod, and running the headless suite.
 2. **Standalone feature tests** — the full suite on the newest engine.
 3. **Upstream coverage** — fails loudly if the matrix stops tracking upstream: it reads the manifest range and the matrix, then errors if the floor isn't tested, a cell is out of range, or the newest in-range upstream release is missing. This is the tripwire that stops the matrix from silently going stale.
 

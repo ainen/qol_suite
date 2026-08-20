@@ -17,9 +17,9 @@ outside the supported range.
 
 | | |
 |---|---|
-| **Mod version** | 1.3.0 |
+| **Mod version** | 1.4.0 |
 | **Supported engine** | gen1recomp `>=0.1.95 <0.3.0` |
-| **Newest tested engine** | **v0.2.10** (the current gen1recomp release) |
+| **Newest tested engine** | **v0.2.12** (the current gen1recomp release) |
 | **Minimum engine** | **v0.1.95** (the first release with native option-row `visible_if`) |
 | **Games** | Red, Blue, Yellow (Gen 1) and Gold |
 
@@ -32,12 +32,13 @@ The engine range matters for two reasons:
   **no custom visibility shim** — the in-game manager and the pre-game launcher
   stay in sync, and dependent rows never appear orphaned.
 - **`>=0.1.95 <0.3.0`** — the floor is v0.1.95 (native `visible_if`), and the
-  range is tested against both the floor and the current release (**v0.2.10**).
+  range is tested against both the floor and the current release (**v0.2.12**).
 
 **Gen 1 vs Gold.** The option set adapts to the game:
 
-- **Gen 1 (Red/Blue/Yellow):** `XP BAR` and `CAUGHT MARKER` are available (Gold
-  has its own native versions, so those two are hidden there).
+- **Gen 1 (Red/Blue/Yellow):** `XP BAR`, `CAUGHT MARKER`, and `WALL BUMP SOUND`
+  are available (Gold has its own native versions of the first two, so those
+  are hidden there; Gold currently emits no movement-path bump cue).
 - **Gold:** `STOP ON SHINY`, `CATCH SHINY ONLY`, `EGG TRACKER`, and the extra
   encounter-tracker detail rows (`SHOW TIME OF DAY`, `SHOW SWARMS`, `SHOW
   ROAMING`, `SHOW RARE`, `SHOW HEADBUTT`, `SHOW ROCK SMASH`, `SHOW BUG
@@ -155,6 +156,9 @@ parent) hide automatically until the parent is enabled.
   sections are hidden on Gen 1.
 - **TRACKER CORNER** — Chooses the encounter tracker corner. Requires
   ENCOUNTER TRACKER.
+- **WALL BUMP SOUND** *(Gen 1 only)* — Keeps or silences the sound played when
+  the player walks into an impassable tile or overworld entity. It is enabled
+  by default to preserve the native behavior.
 
 ### Interface and naming
 

@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.4.0 - 2026-08-20
+
+- Added **WALL BUMP SOUND** for Red, Blue, and Yellow. Disable it from the
+  QoL Suite settings to silence the cue played when the player walks into an
+  impassable tile or overworld entity; it remains enabled by default.
+
 ## 1.3.0 - 2026-08-18
 
 - Added **CATCH SHINY ONLY** (Gold-only, under AUTO CATCH): when enabled,

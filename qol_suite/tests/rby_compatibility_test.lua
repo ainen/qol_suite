@@ -20,7 +20,7 @@ local MOD_ID = "qol_suite"
 T.eq(#run.errors, 0, version .. " package load is clean ("
   .. tostring(run.errors[1]) .. ")")
 local schema = run.loader.optionSchemas[MOD_ID]
-T.eq(#schema, 53, version .. " exposes the complete flat 0.1.x schema")
+T.eq(#schema, 54, version .. " exposes the complete flat 0.1.x schema")
 local keys = {}
 for _, row in ipairs(schema) do
   keys[row.key] = true
@@ -31,7 +31,7 @@ for _, row in ipairs(schema) do
     version .. " uses only supported 0.1.x option row types")
   T.eq(row.options, nil, version .. " option rows are not nested")
 end
-for _, key in ipairs({ "experienceBar", "caughtIndicator" }) do
+for _, key in ipairs({ "experienceBar", "caughtIndicator", "wallCollisionSound" }) do
   T.check(keys[key] == true, version .. " exposes Gen 1 option " .. key)
 end
 for _, key in ipairs({
@@ -43,7 +43,7 @@ for _, key in ipairs({
 end
 
 local exports = run.loader.exports[MOD_ID]
-T.check(type(exports) == "table" and #exports.features == 27,
+T.check(type(exports) == "table" and #exports.features == 28,
   version .. " loads every QoL Suite runtime module")
 T.check(not (GameVersion.isGold and GameVersion.isGold()),
   version .. " follows the RBY generation path")

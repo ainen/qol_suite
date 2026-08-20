@@ -53,7 +53,7 @@ for _, key in ipairs({
 }) do
   T.check(keys[key] == true, "Gold schema contains " .. key)
 end
-for _, key in ipairs({ "experienceBar", "caughtIndicator" }) do
+for _, key in ipairs({ "experienceBar", "caughtIndicator", "wallCollisionSound" }) do
   T.check(keys[key] ~= true, "Gen 1-only option is omitted from Gold: " .. key)
 end
 
@@ -88,7 +88,7 @@ T.check(byKey.eggTracker.visible_if == nil,
   "Gold EGG TRACKER is a direct PARTY category toggle")
 
 local exports = run.loader.exports[MOD_ID]
-T.check(type(exports) == "table" and #exports.features == 27,
+T.check(type(exports) == "table" and #exports.features == 28,
   "Gold loads every QoL Suite runtime module")
 for _, helper in ipairs({
   "autoBattle", "autoCatchTarget", "encounterTracker", "encounterRate",

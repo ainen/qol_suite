@@ -26,7 +26,7 @@ T.check(not Semver.satisfies("0.1.94", manifest.game_version)
     and not Semver.satisfies("0.3.0", manifest.game_version),
   "pre-native and future major-minor engine lines stay outside the range")
 local schema = run.loader.optionSchemas.qol_suite
-T.eq(#schema, 53, "RBY receives every setting as a flat row")
+T.eq(#schema, 54, "RBY receives every setting as a flat row")
 for _, row in ipairs(schema) do
   T.check(row.type == "toggle" or row.type == "choice"
       or row.type == "number" or row.type == "text",

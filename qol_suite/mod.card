@@ -15,6 +15,7 @@ return {
       "Pokédex filters and current-area encounter details",
       "bag categories, search, sorting, quick-use shortcuts, and ball counts",
       "party ordering, naming controls, floating menus, and shorter Center healing",
+      "an optional Gen 1 wall-bump sound toggle",
       "dependent settings that hide when their parent feature is disabled",
       "compatibility adapters for supported voxel and Gen 3-inspired battle UIs",
     },

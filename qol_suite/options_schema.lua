@@ -166,6 +166,9 @@ if isGen1 then
   insertAfter("experienceBar", {
     key = "caughtIndicator", label = "CAUGHT MARKER", type = "toggle", default = true,
   })
+  insertAfter("caughtIndicator", {
+    key = "wallCollisionSound", label = "WALL BUMP SOUND", type = "toggle", default = true,
+  })
 else
   insertAfter("autoBattle", {
     key = "autoStopShiny", label = "STOP ON SHINY", type = "toggle",
